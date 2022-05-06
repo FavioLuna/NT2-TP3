@@ -16,29 +16,91 @@ new Vue({
             return `${salud}%`
         },
         empezarPartida: function () {
+            this.hayUnaPartidaEnJuego = true;
+            this.saludJugador = 100;
+            this.saludMonstruo = 100;
         },
         atacar: function () {
+            var min = Math.min(...rangoAtaque);
+            var max = Math.max(...rangoAtaque);
+            console.log(min, max);
+            var daño = this.calcularHeridas(min, max);
+            this.saludMonstruo -=daño;
+            this.turnos.unshift({
+                esJugador: true,
+                text: 'El jugador atacó al monstruo por ' + daño + ' de daño'
+            })
+            if (this.verificarGanador()) {
+                return;
+            }
+            this.ataqueDelMonstruo();
         },
 
         ataqueEspecial: function () {
+            var daño = this.calcularHeridas(Math.min(this.rangoAtaqueEspecial), Math.max(this.rangoAtaqueEspecial));
+            this.saludMonstruo -= daño;
+            this.turnos.unshift({
+                esJugador: true,
+                text: 'El jugador usó un ataque especial por ' + daño + ' de daño'
+            })
+            if (this.verificarGanador()) {
+                return;
+            }
+            this.ataqueDelMonstruo();
         },
 
         curar: function () {
+            if (this.saludJugador <= 90) {
+                this.saludJugador += 10;
+            } else{
+                this.saludJugador = 100;
+            }
+            this.turnos.unshift({
+                esJugador: true,
+                text: 'El jugador regeneró +10 de salud'  
+            })
+            this.ataqueDelMonstruo();
         },
 
         registrarEvento(evento) {
         },
         terminarPartida: function () {
+            this.hayUnaPartidaEnJuego = false;
         },
 
         ataqueDelMonstruo: function () {
+            var daño = this.calcularHeridas(Math.min(this.rangoAtaqueDelMonstruo), Math.max(this.rangoAtaqueDelMonstruo));
+            this.saludJugador -= daño;
+            this.turnos.unshift({
+                esJugador: false,
+                text: 'El monstruo atacó con ' + daño + ' de daño'
+            })
+            this.verificarGanador();
         },
 
-        calcularHeridas: function (rango) {
-            return 0
-
+        calcularHeridas: function (min, max) {
+            return Math.max(Math.floor(Math.random() * max) + 1, min)
+      
         },
+
         verificarGanador: function () {
+            if (this.saludMonstruo <= 0) {
+                if (confirm('Ganaste! Jugar de nuevo?')) {
+                    this.empezarPartida();
+                }else{
+                    this.hayUnaPartidaEnJuego = false;
+                }
+
+                return true;
+            } else if(this.saludJugador <= 0){
+                if (confirm('Perdiste! Jugar de nuevo?')) {
+                    this.empezarPartida();
+                } else {
+                    this.hayUnaPartidaEnJuego = false;
+                }
+                
+                return true;
+            }
             return false;
         },
         cssEvento(turno) {

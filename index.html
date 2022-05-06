@@ -47,7 +47,7 @@
                 <button id="rendirse" @click="terminarPartida">RENDIRSE</button>
             </div>
         </section>
-        <section class="row log" v-if="turnos.length > 0">
+        <section class="row log" v-if="turnos.length > 0 && hayUnaPartidaEnJuego">
             <div class="small-12 columns">
                 <ul>
                     <li v-for="(turno,index) in turnos" :class="cssEvento(turno)"
