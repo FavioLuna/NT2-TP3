@@ -21,9 +21,8 @@ new Vue({
             this.saludMonstruo = 100;
         },
         atacar: function () {
-            var min = Math.min(...rangoAtaque);
-            var max = Math.max(...rangoAtaque);
-            console.log(min, max);
+            var min = this.rangoAtaque[0];
+            var max = this.rangoAtaque[1];
             var daño = this.calcularHeridas(min, max);
             this.saludMonstruo -=daño;
             this.turnos.unshift({
@@ -37,7 +36,9 @@ new Vue({
         },
 
         ataqueEspecial: function () {
-            var daño = this.calcularHeridas(Math.min(this.rangoAtaqueEspecial), Math.max(this.rangoAtaqueEspecial));
+            var min = this.rangoAtaqueEspecial[0];
+            var max = this.rangoAtaqueEspecial[1];
+            var daño = this.calcularHeridas(min, max);
             this.saludMonstruo -= daño;
             this.turnos.unshift({
                 esJugador: true,
@@ -66,10 +67,13 @@ new Vue({
         },
         terminarPartida: function () {
             this.hayUnaPartidaEnJuego = false;
+            this.turnos = [];
         },
 
         ataqueDelMonstruo: function () {
-            var daño = this.calcularHeridas(Math.min(this.rangoAtaqueDelMonstruo), Math.max(this.rangoAtaqueDelMonstruo));
+            var min = this.rangoAtaqueDelMonstruo[0];
+            var max = this.rangoAtaqueDelMonstruo[1];
+            var daño = this.calcularHeridas(min, max);            
             this.saludJugador -= daño;
             this.turnos.unshift({
                 esJugador: false,
@@ -90,7 +94,7 @@ new Vue({
                 }else{
                     this.hayUnaPartidaEnJuego = false;
                 }
-
+                this.turnos = [];
                 return true;
             } else if(this.saludJugador <= 0){
                 if (confirm('Perdiste! Jugar de nuevo?')) {
@@ -98,7 +102,7 @@ new Vue({
                 } else {
                     this.hayUnaPartidaEnJuego = false;
                 }
-                
+                this.turnos = [];
                 return true;
             }
             return false;
