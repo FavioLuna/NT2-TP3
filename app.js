@@ -21,9 +21,7 @@ new Vue({
             this.saludMonstruo = 100;
         },
         atacar: function () {
-            var min = this.rangoAtaque[0];
-            var max = this.rangoAtaque[1];
-            var daño = this.calcularHeridas(min, max);
+            var daño = this.calcularHeridas(this.rangoAtaque[0], this.rangoAtaque[1]);
             this.saludMonstruo -=daño;
             this.turnos.unshift({
                 esJugador: true,
@@ -36,9 +34,7 @@ new Vue({
         },
 
         ataqueEspecial: function () {
-            var min = this.rangoAtaqueEspecial[0];
-            var max = this.rangoAtaqueEspecial[1];
-            var daño = this.calcularHeridas(min, max);
+            var daño = this.calcularHeridas(this.rangoAtaqueEspecial[0], this.rangoAtaqueEspecial[1]);
             this.saludMonstruo -= daño;
             this.turnos.unshift({
                 esJugador: true,
@@ -71,9 +67,7 @@ new Vue({
         },
 
         ataqueDelMonstruo: function () {
-            var min = this.rangoAtaqueDelMonstruo[0];
-            var max = this.rangoAtaqueDelMonstruo[1];
-            var daño = this.calcularHeridas(min, max);            
+            var daño = this.calcularHeridas(this.rangoAtaqueDelMonstruo[0], this.rangoAtaqueDelMonstruo[1]);            
             this.saludJugador -= daño;
             this.turnos.unshift({
                 esJugador: false,
